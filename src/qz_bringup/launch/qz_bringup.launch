@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+  <include file="$(find xsens_driver)/launch/xsens_driver.launch">
+    <arg name="baudrate" value="115200"/>
+    <arg name="frame_id" value="imu_link"/>
+  </include>
+</launch>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+  <master auto="start"/>
+
+  <!-- cmd_vel bridge -->
+  <node pkg="qz_bridge" type="cmd_vel_bridge" respawn="false" name="cmd_vel_bridge" output="screen">
+    <param name="robotconfig" value="$(find qz_bridge)/configs/RobotY13.xml"/>
+    <remap from="/cmd_vel_bridge/cmd_vel" to="/cmd_vel"/>
+  </node>
+</launch>

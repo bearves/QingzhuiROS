@@ -1,0 +1,15 @@
+<launch>
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find qz_navigation)/configs
+          -configuration_basename cartographer_qingzhui_2d.lua"
+      output="screen">
+    <remap from="/scan" to="/scan"/>
+    <remap from="/imu" to="/imu/data"/>
+  </node>
+
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+</launch>
