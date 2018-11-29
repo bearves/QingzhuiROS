@@ -1,8 +1,8 @@
-obstacle_range: 3.0
-raytrace_range: 3.5
-footprint: [[-0.4, -0.42], [-0.4, 0.42], [0.4, 0.42], [0.4, -0.42]]
-inflation_radius: 0.15
-cost_scaling_factor: 3.0
+obstacle_range: 4.0
+raytrace_range: 5.0
+footprint: [[-0.9, -0.42], [-0.9, 0.42], [0.9, 0.42], [0.9, -0.42]]
+inflation_radius: 0.5
+cost_scaling_factor: 1.1
 
 observation_sources: laser_scan_sensor #point_cloud_sensor
 
