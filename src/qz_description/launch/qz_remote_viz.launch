@@ -1,0 +1,6 @@
+<launch>
+  
+  <node name="rviz" pkg="rviz" type="rviz"
+      args="-d $(find qz_description)/rviz/qz_rviz_setting.rviz" />
+  
+</launch>
