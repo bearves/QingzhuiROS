@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!--- Bring up sensors -->
+  <include file="$(find qz_bringup)/launch/qz_bringup.launch"/>
+
+  <!--- Setup tf -->
+  <include file="$(find qz_description)/launch/qz_description.launch"/>
+
+  <!--- Run cartograhper -->
+  <include file="$(find qz_navigation)/launch/qz_navigation_slam.launch"/>
+
+  <!-- Move base -->
+  <include file="$(find qz_navigation)/launch/qz_navigation_path_plan.launch"/>
+
+  <!-- Bridge to robot -->
+  <include file="$(find qz_bridge)/launch/cmd_vel_bridge.launch"/>
+
+</launch>

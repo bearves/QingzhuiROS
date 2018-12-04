@@ -111,11 +111,6 @@ int main(int argc, char **argv)
 
         if (p_data && p_data->IsObject())
         {
-            rapidjson::StringBuffer buf;
-            rapidjson::Writer<rapidjson::StringBuffer> writer(buf);
-            (*p_data).Accept(writer);
-            std::cout << buf.GetString() << std::endl;
-
             if (p_data->HasMember("body_vel"))
             {
                 rapidjson::Value &body_vel = (*p_data)["body_vel"];
@@ -128,7 +123,7 @@ int main(int argc, char **argv)
             }
         }
 
-        ROS_INFO("Vel: %.4f, %.4f Rate: %.4f", trot_vel, side_vel, turn_rate);
+        //ROS_INFO("Vel: %.4f, %.4f Rate: %.4f", trot_vel, side_vel, turn_rate);
 
         msg.child_frame_id = "base_link";
         msg.header.frame_id = "map";

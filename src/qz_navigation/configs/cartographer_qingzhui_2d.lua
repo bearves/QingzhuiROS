@@ -43,7 +43,7 @@ options = {
 }
 
 TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
-TRAJECTORY_BUILDER_2D.submaps.num_range_data = 20
+TRAJECTORY_BUILDER_2D.submaps.num_range_data = 50
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 20
 
 MAP_BUILDER.use_trajectory_builder_2d = true

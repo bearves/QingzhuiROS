@@ -5,7 +5,9 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
   
+  <!-- rviz run in remote 
   <node name="rviz" pkg="rviz" type="rviz"
       args="-d $(find qz_description)/rviz/qz_rviz_setting.rviz" />
+  -->
   
 </launch>
