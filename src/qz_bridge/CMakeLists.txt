@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(qz_bridge)
+set( CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -10,20 +11,26 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  tf2
   std_msgs
   std_srvs
   geometry_msgs
+  message_generation
+)
+
+add_message_files(
+  FILES
+  GaitPhase.msg
+  RobotTipState.msg
+) 
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
-
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
-
 
 ###################################
 ## catkin specific configuration ##
@@ -37,9 +44,10 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES qz_bridge
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
+
 
 ###########
 ## Build ##
@@ -48,9 +56,8 @@ catkin_package(
 # set our dependent libs for qingzhui robot
 set(GENERAL_INCL_DIR "/usr/Aris_Dependent")
 set(SYSTEM_LINK_LIB pthread zmq)
-set(XENOMAI_INCL_DIR "/usr/Aris_Dependent/xenomai/include")
-set(XENOMAI_LINK_DIR "/usr/Aris_Dependent/xenomai/lib")
-set(RPDJSON_INCL_DIR "/usr/Aris_Dependent/rapidjson/include")
+set(XENOMAI_INCL_DIR "/usr/xenomai/include")
+set(RPDJSON_INCL_DIR "/usr/local/include/rapidjson")
 set(ARIS_INCL_DIR "/usr/aris/include")
 set(ARIS_LINK_DIR "/usr/aris/lib")
 set(NRT_ARIS_LINK_LIB  aris_core)
@@ -75,3 +82,6 @@ link_directories(${NRT_LINK_DIR})
 
 add_executable(cmd_vel_bridge src/cmd_vel_bridge.cpp)
 target_link_libraries(cmd_vel_bridge ${catkin_LIBRARIES} ${NRT_LINK_LIB})
+
+add_executable(qz_state_publisher src/qz_state_publisher.cpp src/QzRobotStatePublisher.cpp)
+target_link_libraries(qz_state_publisher ${catkin_LIBRARIES} ${NRT_LINK_LIB})

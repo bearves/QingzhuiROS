@@ -4,7 +4,10 @@
 #include "std_srvs/SetBool.h"
 #include "DataClient.h"
 #include "DataHost.h"
+
+#define NON_RT
 #include <aris.h>
+
 #include <unistd.h>
 #include <iostream>
 #include <cstdio>

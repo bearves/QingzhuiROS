@@ -484,13 +484,14 @@
         <IMU active="false" type="xsens_imu" portLinux="/dev/ttyUSB0" baudRate="921600" sampleRate="400" PeImuGround2BodyGound="{0,0,0,0,-PI/2,PI}" PeImu2Body="{0,0,0,0,PI/2,0}"/>
         <Vision type="kinect2.0"/>
     </Sensors>
-    <DataAgent ip="10.0.0.146" router_port="5882" dealer_port="5884" data_sub_port="5886">
+    <DataAgent ip="0.0.0.0" router_port="5882" dealer_port="5884" data_sub_port="5886">
     </DataAgent>
     <Clients>
         <LineCommander net_id="lcmd_req"/>
         <TrnWalkHighLvPlanner net_id="twk_hl_planner"/>
         <VisionDemo net_id="vision_demo"/>
         <RosCmdVelBridge net_id="ros_cmd_vel_bridge"/>
+        <RosQzStatePublisher net_id="ros_qz_state_publisher"/>
         <FakeServer net_id="rbt_resp" ip="127.0.0.1" cmd_port="5866" data_pub_port="5880"/>
     </Clients>
 </RobotXIV>
