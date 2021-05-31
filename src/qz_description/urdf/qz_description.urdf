@@ -43,7 +43,15 @@
     </visual>
   </link>
 
-  <link name="base_link" />
+  <link name="base_link" >
+    <visual>
+      <origin xyz="0.0 0.0 0.0" />
+      <geometry>
+        <box size="1.2 0.8 0.4" />
+      </geometry>
+      <material name="orange" />
+    </visual>
+  </link>
 
   <joint name="imu_link_joint" type="fixed">
     <parent link="base_link" />
