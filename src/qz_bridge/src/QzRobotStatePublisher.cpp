@@ -107,21 +107,6 @@ namespace qz_bridge
         odom_pub.publish(msg);
     }
 
-    void QzRobotStatePublisher::publishGaitPhaseMsg()
-    {
-        qz_bridge::GaitPhase msg;
-        auto *p_custom_data = data_host.GetCustomGaitData()->data();
-
-        getPhaseData(msg.stance_phase, p_custom_data, "stPgs");
-        getPhaseData(msg.swing_phase, p_custom_data, "swPgs");
-        getPhaseData(msg.touch_possibility, p_custom_data, "tchPgs");
-
-        msg.header.frame_id = "base_link";
-        msg.header.stamp = ros::Time::now();
-
-        gaitphase_pub.publish(msg);
-    }
-
     void QzRobotStatePublisher::publishImuMsg()
     {
         double body_angvel[3]{0, 0, 0};
@@ -161,6 +146,21 @@ namespace qz_bridge
         msg.orientation.w = q[3];
 
         imu_pub.publish(msg);
+    }
+
+    void QzRobotStatePublisher::publishGaitPhaseMsg()
+    {
+        qz_bridge::GaitPhase msg;
+        auto *p_custom_data = data_host.GetCustomGaitData()->data();
+
+        getPhaseData(msg.stance_phase, p_custom_data, "stPgs");
+        getPhaseData(msg.swing_phase, p_custom_data, "swPgs");
+        getPhaseData(msg.touch_possibility, p_custom_data, "tchPgs");
+
+        msg.header.frame_id = "base_link";
+        msg.header.stamp = ros::Time::now();
+
+        gaitphase_pub.publish(msg);
     }
 
     void QzRobotStatePublisher::publishTipStateMsg()
