@@ -39,16 +39,26 @@ namespace qz_bridge
         ros::Publisher imu_pub;
         ros::Publisher gaitphase_pub;
         ros::Publisher tipstate_pub;
+        std::string config_file_path;
+        std::string version;
 
         void publishOdomMsg();
         void publishImuMsg();
         void publishTipStateMsg();
+        void publishTipStateMsg2();
         void publishGaitPhaseMsg();
+        void publishGaitPhaseMsg2();
 
         void getPhaseData(
             boost::array<float, 6> &phase_data_entry,
             const rapidjson::Document *p_custom_data,
             const char *data_key_name);
+
+        void getPhaseData(
+            boost::array<float, 1> &phase_data_entry,
+            const rapidjson::Document *p_custom_data,
+            const char *data_key_name);
+
         void getTipStateData(
             boost::array<double, 18> &tip_state_data_entry,
             const rapidjson::Document *p_custom_data,

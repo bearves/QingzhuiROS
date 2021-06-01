@@ -5,17 +5,27 @@ namespace qz_bridge
     QzRobotStatePublisher::QzRobotStatePublisher()
     {
         ros::NodeHandle n("~");
-        std::string param;
 
         if (n.hasParam("robotconfig"))
         {
-            n.getParam("robotconfig", param);
-            ROS_INFO("Use specified config file path: %s", param.c_str());
+            n.getParam("robotconfig", config_file_path);
+            ROS_INFO("Use specified config file path: %s", config_file_path.c_str());
         }
         else
         {
-            param = "./RobotY13.xml";
-            ROS_INFO("Use default config file path: %s", param.c_str());
+            config_file_path = "./RobotY13.xml";
+            ROS_INFO("Use default config file path: %s", config_file_path.c_str());
+        }
+
+        if (n.hasParam("version"))
+        {
+            n.getParam("version", version);
+            ROS_INFO("Bridge protocol version: %s", version.c_str());
+        }
+        else
+        {
+            version = "2";
+            ROS_INFO("Default bridge protocol version: %s", version.c_str());
         }
 
         odom_pub = n.advertise<nav_msgs::Odometry>("robot_odom", 10);
@@ -23,7 +33,7 @@ namespace qz_bridge
         gaitphase_pub = n.advertise<qz_bridge::GaitPhase>("robot_gait_phase", 10);
         tipstate_pub = n.advertise<qz_bridge::RobotTipState>("robot_tip_state", 10);
 
-        client.Initialize(param, "RosQzStatePublisher");
+        client.Initialize(config_file_path, "RosQzStatePublisher");
     }
 
     QzRobotStatePublisher::~QzRobotStatePublisher()
@@ -37,8 +47,16 @@ namespace qz_bridge
 
         publishOdomMsg();
         publishImuMsg();
-        publishGaitPhaseMsg();
-        publishTipStateMsg();
+        if (version == "2")
+        {
+            publishGaitPhaseMsg2();
+            publishTipStateMsg2();
+        }
+        else
+        {
+            publishGaitPhaseMsg();
+            publishTipStateMsg();
+        }
     }
 
     void QzRobotStatePublisher::publishOdomMsg()
@@ -163,6 +181,21 @@ namespace qz_bridge
         gaitphase_pub.publish(msg);
     }
 
+    void QzRobotStatePublisher::publishGaitPhaseMsg2()
+    {
+        qz_bridge::GaitPhase msg;
+        auto *p_custom_data = data_host.GetCustomGaitData()->data();
+
+        getPhaseData(msg.gait_count, p_custom_data, "tag");
+        getPhaseData(msg.gait_phase, p_custom_data, "pgs");
+        getPhaseData(msg.touch_possibility, p_custom_data, "tchPgs");
+
+        msg.header.frame_id = "base_link";
+        msg.header.stamp = ros::Time::now();
+
+        gaitphase_pub.publish(msg);
+    }
+
     void QzRobotStatePublisher::publishTipStateMsg()
     {
         qz_bridge::RobotTipState msg;
@@ -171,6 +204,22 @@ namespace qz_bridge
         getTipStateData(msg.tip_pos, p_custom_data, "actTip");
         getTipStateData(msg.tip_vel, p_custom_data, "actTipV");
         getTipStateData(msg.tip_fce, p_custom_data, "actTipF");
+
+        msg.header.frame_id = "base_link";
+        msg.header.stamp = ros::Time::now();
+
+        tipstate_pub.publish(msg);
+    }
+
+    void QzRobotStatePublisher::publishTipStateMsg2()
+    {
+        qz_bridge::RobotTipState msg;
+        auto *p_custom_data = data_host.GetCustomGaitData()->data();
+
+        getTipStateData(msg.tip_pos, p_custom_data, "actTip");
+        getTipStateData(msg.cmd_pos, p_custom_data, "cmdTip");
+        getTipStateData(msg.tip_fce, p_custom_data, "actFoc");
+        getTipStateData(msg.cmd_fce, p_custom_data, "cmdFoc");
 
         msg.header.frame_id = "base_link";
         msg.header.stamp = ros::Time::now();
@@ -207,6 +256,24 @@ namespace qz_bridge
             if (value.IsArray())
             {
                 for (int i = 0; i < 6; i++)
+                {
+                    phase_data_entry[i] = value[i].GetDouble();
+                }
+            }
+        }
+    }
+
+    void QzRobotStatePublisher::getPhaseData(
+        boost::array<float, 1> &phase_data_entry,
+        const rapidjson::Document *p_custom_data,
+        const char *data_key_name)
+    {
+        if (p_custom_data->HasMember(data_key_name))
+        {
+            const rapidjson::Value &value = (*p_custom_data)[data_key_name];
+            if (value.IsArray())
+            {
+                for (int i = 0; i < 1; i++)
                 {
                     phase_data_entry[i] = value[i].GetDouble();
                 }
