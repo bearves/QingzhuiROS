@@ -17,21 +17,10 @@ namespace qz_bridge
             ROS_INFO("Use default config file path: %s", config_file_path.c_str());
         }
 
-        if (n.hasParam("version"))
-        {
-            n.getParam("version", version);
-            ROS_INFO("Bridge protocol version: %s", version.c_str());
-        }
-        else
-        {
-            version = "2";
-            ROS_INFO("Default bridge protocol version: %s", version.c_str());
-        }
-
         odom_pub = n.advertise<nav_msgs::Odometry>("robot_odom", 10);
         imu_pub = n.advertise<sensor_msgs::Imu>("robot_imu", 10);
-        gaitphase_pub = n.advertise<qz_bridge::GaitPhase>("robot_gait_phase", 10);
-        tipstate_pub = n.advertise<qz_bridge::RobotTipState>("robot_tip_state", 10);
+        gaitphase_pub = n.advertise<GaitPhaseMsg>("robot_gait_phase", 10);
+        tipstate_pub = n.advertise<RobotTipStateMsg>("robot_tip_state", 10);
 
         client.Initialize(config_file_path, "RosQzStatePublisher");
     }
@@ -47,16 +36,8 @@ namespace qz_bridge
 
         publishOdomMsg();
         publishImuMsg();
-        if (version == "2")
-        {
-            publishGaitPhaseMsg2();
-            publishTipStateMsg2();
-        }
-        else
-        {
-            publishGaitPhaseMsg();
-            publishTipStateMsg();
-        }
+        publishGaitPhaseMsg();
+        publishTipStateMsg();
     }
 
     void QzRobotStatePublisher::publishOdomMsg()
@@ -64,6 +45,7 @@ namespace qz_bridge
         double body_est_vel[3]{0, 0, 0};
         double body_est_pos[3]{0, 0, 0};
         nav_msgs::Odometry msg;
+
         auto *p_custom_data = data_host.GetCustomGaitData()->data();
 
         if (p_custom_data && p_custom_data->IsObject())
@@ -166,9 +148,10 @@ namespace qz_bridge
         imu_pub.publish(msg);
     }
 
+#ifdef BRIDGE_PROTOCOL_VERSION_1
     void QzRobotStatePublisher::publishGaitPhaseMsg()
     {
-        qz_bridge::GaitPhase msg;
+        GaitPhaseMsg msg;
         auto *p_custom_data = data_host.GetCustomGaitData()->data();
 
         getPhaseData(msg.stance_phase, p_custom_data, "stPgs");
@@ -180,10 +163,12 @@ namespace qz_bridge
 
         gaitphase_pub.publish(msg);
     }
+#endif
 
-    void QzRobotStatePublisher::publishGaitPhaseMsg2()
+#ifdef BRIDGE_PROTOCOL_VERSION_2
+    void QzRobotStatePublisher::publishGaitPhaseMsg()
     {
-        qz_bridge::GaitPhase msg;
+        GaitPhaseMsg msg;
         auto *p_custom_data = data_host.GetCustomGaitData()->data();
 
         getPhaseData(msg.gait_count, p_custom_data, "tag");
@@ -195,10 +180,12 @@ namespace qz_bridge
 
         gaitphase_pub.publish(msg);
     }
+#endif
 
+#ifdef BRIDGE_PROTOCOL_VERSION_1
     void QzRobotStatePublisher::publishTipStateMsg()
     {
-        qz_bridge::RobotTipState msg;
+        RobotTipStateMsg msg;
         auto *p_custom_data = data_host.GetCustomGaitData()->data();
 
         getTipStateData(msg.tip_pos, p_custom_data, "actTip");
@@ -210,10 +197,12 @@ namespace qz_bridge
 
         tipstate_pub.publish(msg);
     }
+#endif
 
-    void QzRobotStatePublisher::publishTipStateMsg2()
+#ifdef BRIDGE_PROTOCOL_VERSION_2
+    void QzRobotStatePublisher::publishTipStateMsg()
     {
-        qz_bridge::RobotTipState msg;
+        RobotTipStateMsg msg;
         auto *p_custom_data = data_host.GetCustomGaitData()->data();
 
         getTipStateData(msg.tip_pos, p_custom_data, "actTip");
@@ -226,6 +215,7 @@ namespace qz_bridge
 
         tipstate_pub.publish(msg);
     }
+#endif
 
     void QzRobotStatePublisher::getTipStateData(
         boost::array<double, 18> &tip_state_data_entry,

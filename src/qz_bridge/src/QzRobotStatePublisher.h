@@ -6,8 +6,14 @@
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/Imu.h"
 #include "tf2/LinearMath/Quaternion.h"
+#ifdef BRIDGE_PROTOCOL_VERSION_1
 #include "qz_bridge/GaitPhase.h"
 #include "qz_bridge/RobotTipState.h"
+#endif
+#ifdef BRIDGE_PROTOCOL_VERSION_2
+#include "qz_bridge/GaitPhaseV2.h"
+#include "qz_bridge/RobotTipStateV2.h"
+#endif
 
 #include <unistd.h>
 #include <iostream>
@@ -25,6 +31,15 @@
 
 namespace qz_bridge
 {
+#ifdef BRIDGE_PROTOCOL_VERSION_1
+    typedef qz_bridge::GaitPhase GaitPhaseMsg;
+    typedef qz_bridge::RobotTipState RobotTipStateMsg;
+#endif
+#ifdef BRIDGE_PROTOCOL_VERSION_2
+    typedef qz_bridge::GaitPhaseV2 GaitPhaseMsg;
+    typedef qz_bridge::RobotTipStateV2 RobotTipStateMsg;
+#endif
+
     class QzRobotStatePublisher
     {
     public:
@@ -45,9 +60,7 @@ namespace qz_bridge
         void publishOdomMsg();
         void publishImuMsg();
         void publishTipStateMsg();
-        void publishTipStateMsg2();
         void publishGaitPhaseMsg();
-        void publishGaitPhaseMsg2();
 
         void getPhaseData(
             boost::array<float, 6> &phase_data_entry,

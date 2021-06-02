@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(qz_bridge)
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set( CMAKE_BUILD_TYPE RELEASE)
+set( BRIDGE_PROTOCOL_VERSION 1)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -22,6 +24,8 @@ add_message_files(
   FILES
   GaitPhase.msg
   RobotTipState.msg
+  GaitPhaseV2.msg
+  RobotTipStateV2.msg
 ) 
 
 generate_messages(
@@ -79,6 +83,12 @@ include_directories(
 )
 
 link_directories(${NRT_LINK_DIR})
+
+if (BRIDGE_PROTOCOL_VERSION EQUAL 1)
+  add_definitions(-DBRIDGE_PROTOCOL_VERSION_1)
+elseif (BRIDGE_PROTOCOL_VERSION EQUAL 2)
+  add_definitions(-DBRIDGE_PROTOCOL_VERSION_2)
+endif()
 
 add_executable(cmd_vel_bridge src/cmd_vel_bridge.cpp)
 target_link_libraries(cmd_vel_bridge ${catkin_LIBRARIES} ${NRT_LINK_LIB})
