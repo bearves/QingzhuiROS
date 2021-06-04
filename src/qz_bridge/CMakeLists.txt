@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(qz_bridge)
+project(mini_bridge)
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set( CMAKE_BUILD_TYPE RELEASE)
 set( BRIDGE_PROTOCOL_VERSION 1)

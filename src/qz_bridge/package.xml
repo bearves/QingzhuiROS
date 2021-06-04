@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>qz_bridge</name>
+  <name>mini_bridge</name>
   <version>0.0.0</version>
   <description>The nav_bridge package</description>
 
