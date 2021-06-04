@@ -4,8 +4,7 @@
   <master auto="start"/>
 
   <!-- cmd_vel bridge -->
-  <node pkg="mini_bridge" type="cmd_vel_bridge" respawn="false" name="cmd_vel_bridge" output="screen">
+  <node pkg="mini_bridge" type="qz_state_publisher" respawn="false" name="qz_state_publisher" output="screen">
     <param name="robotconfig" value="$(find mini_bridge)/configs/RobotY13.xml"/>
-    <remap from="/cmd_vel_bridge/cmd_vel" to="/cmd_vel"/>
   </node>
 </launch>

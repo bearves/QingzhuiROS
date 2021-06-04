@@ -484,7 +484,7 @@
         <IMU active="false" type="xsens_imu" portLinux="/dev/ttyUSB0" baudRate="921600" sampleRate="400" PeImuGround2BodyGound="{0,0,0,0,-PI/2,PI}" PeImu2Body="{0,0,0,0,PI/2,0}"/>
         <Vision type="kinect2.0"/>
     </Sensors>
-    <DataAgent ip="0.0.0.0" router_port="5882" dealer_port="5884" data_sub_port="5886">
+    <DataAgent ip="10.0.0.147" router_port="5882" dealer_port="5884" data_sub_port="5886">
     </DataAgent>
     <Clients>
         <LineCommander net_id="lcmd_req"/>

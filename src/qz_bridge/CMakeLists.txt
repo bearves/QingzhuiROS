@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 project(mini_bridge)
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set( CMAKE_BUILD_TYPE RELEASE)
-set( BRIDGE_PROTOCOL_VERSION 1)
+set( BRIDGE_PROTOCOL_VERSION 2)
+set( USE_MULTIPLE_IMU OFF)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -61,7 +62,7 @@ catkin_package(
 set(GENERAL_INCL_DIR "/usr/Aris_Dependent")
 set(SYSTEM_LINK_LIB pthread zmq)
 set(XENOMAI_INCL_DIR "/usr/xenomai/include")
-set(RPDJSON_INCL_DIR "/usr/local/include/rapidjson")
+set(RPDJSON_INCL_DIR "/usr/local/include/rapidjson" "/usr/Aris_Dependent/rapidjson/include")
 set(ARIS_INCL_DIR "/usr/aris/include")
 set(ARIS_LINK_DIR "/usr/aris/lib")
 set(NRT_ARIS_LINK_LIB  aris_core)
@@ -90,8 +91,14 @@ elseif (BRIDGE_PROTOCOL_VERSION EQUAL 2)
   add_definitions(-DBRIDGE_PROTOCOL_VERSION_2)
 endif()
 
+if (USE_MULTIPLE_IMU EQUAL 1)
+  add_definitions(-DMULTI_IMU)
+endif()
+
+
 add_executable(cmd_vel_bridge src/cmd_vel_bridge.cpp)
 target_link_libraries(cmd_vel_bridge ${catkin_LIBRARIES} ${NRT_LINK_LIB})
 
 add_executable(qz_state_publisher src/qz_state_publisher.cpp src/QzRobotStatePublisher.cpp)
 target_link_libraries(qz_state_publisher ${catkin_LIBRARIES} ${NRT_LINK_LIB})
+add_dependencies(qz_state_publisher mini_bridge_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

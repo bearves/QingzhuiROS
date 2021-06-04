@@ -6,7 +6,7 @@
 #include "DataHost.h"
 
 #define NON_RT
-#include <aris.h>
+#include <aris_core.h>
 
 #include <unistd.h>
 #include <iostream>

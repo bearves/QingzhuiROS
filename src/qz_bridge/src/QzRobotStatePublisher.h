@@ -7,12 +7,12 @@
 #include "sensor_msgs/Imu.h"
 #include "tf2/LinearMath/Quaternion.h"
 #ifdef BRIDGE_PROTOCOL_VERSION_1
-#include "qz_bridge/GaitPhase.h"
-#include "qz_bridge/RobotTipState.h"
+#include "mini_bridge/GaitPhase.h"
+#include "mini_bridge/RobotTipState.h"
 #endif
 #ifdef BRIDGE_PROTOCOL_VERSION_2
-#include "qz_bridge/GaitPhaseV2.h"
-#include "qz_bridge/RobotTipStateV2.h"
+#include "mini_bridge/GaitPhaseV2.h"
+#include "mini_bridge/RobotTipStateV2.h"
 #endif
 
 #include <unistd.h>
@@ -24,20 +24,19 @@
 #include "DataHost.h"
 
 #define NON_RT
-#include <aris.h>
+#include <aris_core.h>
 
-#define MULTI_IMU
 #define IMU_INDEX 3
 
 namespace qz_bridge
 {
 #ifdef BRIDGE_PROTOCOL_VERSION_1
-    typedef qz_bridge::GaitPhase GaitPhaseMsg;
-    typedef qz_bridge::RobotTipState RobotTipStateMsg;
+    typedef mini_bridge::GaitPhase GaitPhaseMsg;
+    typedef mini_bridge::RobotTipState RobotTipStateMsg;
 #endif
 #ifdef BRIDGE_PROTOCOL_VERSION_2
-    typedef qz_bridge::GaitPhaseV2 GaitPhaseMsg;
-    typedef qz_bridge::RobotTipStateV2 RobotTipStateMsg;
+    typedef mini_bridge::GaitPhaseV2 GaitPhaseMsg;
+    typedef mini_bridge::RobotTipStateV2 RobotTipStateMsg;
 #endif
 
     class QzRobotStatePublisher
